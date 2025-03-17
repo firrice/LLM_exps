@@ -17,11 +17,20 @@ class Solution(object):
         self.model_solution.query_preprocess(self.query)
     
     async def forward(self):
-        await self.model_solution.generate_streaming()
+        try:
+            self.model_solution.current_generation_task = asyncio.create_task(self.model_solution.generate_streaming())
+            await self.model_solution.current_generation_task  # end util the current generation
+            await self.model_solution._cleanup_engine_resources() # clean up all resources related to vllm engines and ray
+        except asyncio.TimeoutError:
+            print("\n[System] Generation timeout")
+        except asyncio.CancelledError:
+            print("\n[System] Process interrupted by user")
+        finally:
+            pass
         
 async def main():
     solution = Solution()
-    await solution.model_solution.generate_streaming()
+    await solution.forward()
 
 if __name__ == "__main__":
     asyncio.run(main())

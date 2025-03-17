@@ -17,14 +17,14 @@ class deepseek_R1_Distill_Qwen_32B_GPTQ_int4_g128(object):
         self.current_generation_task = None
     
     def query_preprocess(self, query):
-        self.prompt = f'''
-            <指令>请作为大模型助手回答用户的问题。</指令>\n
-            history: \n
-            [{{"role": "user", "content": "你好"}},
-            {{"role": "assistant", "content": "!!!!!!!!!!!!!!!"}}]。
-            <问题> {query} </问题>\n
-        '''
-        #self.prompt = query
+        # self.prompt = f'''
+        #     <指令>请作为大模型助手回答用户的问题。</指令>\n
+        #     history: \n
+        #     [{{"role": "user", "content": "你好"}},
+        #     {{"role": "assistant", "content": "!!!!!!!!!!!!!!!"}}]。
+        #     <问题> {query} </问题>\n
+        # '''
+        self.prompt = query
 
     async def generate_streaming(self):
         try:
@@ -61,6 +61,8 @@ class deepseek_R1_Distill_Qwen_32B_GPTQ_int4_g128(object):
         ray.shutdown()
 
 
+
+# =====================================unit test=========================================================
 async def main():
     model_solution = deepseek_R1_Distill_Qwen_32B_GPTQ_int4_g128("/media/data1/ubuntu_env/data/LLM_models/deepseek-r1-distill-qwen-32b-gptq-int4")
     model_solution.query_preprocess("你是谁")
