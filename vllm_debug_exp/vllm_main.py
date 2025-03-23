@@ -9,7 +9,7 @@ class Solution(object):
     def __init__(self):
         self.model_file_dict = {"deepseek_R1_Distill_Qwen_32B_GPTQ_int4_g128": "/media/data1/ubuntu_env/data/LLM_models/deepseek-r1-distill-qwen-32b-gptq-int4"}
         self.model_name = "deepseek_R1_Distill_Qwen_32B_GPTQ_int4_g128"
-        self.query = "你是谁"
+        self.query = "你好，请帮我写一个3000字的童话故事，素材请自行构造。"
         # ==============model init=================
         models_module =  importlib.import_module("models")
         self.model_solution = getattr(models_module, self.model_name)(model_root=self.model_file_dict[self.model_name])

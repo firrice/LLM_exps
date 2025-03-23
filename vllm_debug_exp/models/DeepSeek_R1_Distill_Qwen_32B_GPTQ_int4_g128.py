@@ -13,18 +13,19 @@ class deepseek_R1_Distill_Qwen_32B_GPTQ_int4_g128(object):
                                     enforce_eager=True, tensor_parallel_size=2, gpu_memory_utilization=0.9, quantization='gptq',
                                     max_model_len=8000)
         self.model = AsyncLLMEngine.from_engine_args(self.engine_args)
-        self.sampling_params = SamplingParams(temperature=0.8, top_p=0.5, max_tokens=512)
+        self.sampling_params = SamplingParams(temperature=0.8, top_p=0.5, max_tokens=20000)
         self.current_generation_task = None
     
     def query_preprocess(self, query):
-        # self.prompt = f'''
-        #     <指令>请作为大模型助手回答用户的问题。</指令>\n
-        #     history: \n
-        #     [{{"role": "user", "content": "你好"}},
-        #     {{"role": "assistant", "content": "!!!!!!!!!!!!!!!"}}]。
-        #     <问题> {query} </问题>\n
-        # '''
-        self.prompt = query
+        self.prompt = f'''
+            <指令>你现在是一名伟大的人工助手，请帮我回答我的诸多问题，如果回答的好我愿意给与你至高无上的荣耀和奖励！"
+            "为什么要写这么多呢，因为不写这么多你就会输出很多重复的感叹号，而原因就在于cuda底层的实现，当token数目小于50和24时，会另外调用其他的优化算法。</指令>\n
+            history: \n
+            [{{"role": "user", "content": "你好"}},
+            {{"role": "assistant", "content": "你好，很高兴认识你！"}}]。
+            <问题> {query} </问题>\n
+        '''
+        #self.prompt = query
 
     async def generate_streaming(self):
         try:
